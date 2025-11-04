@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sevanna's Homepage</title>
+
+  <!-- Importing fonts: Quicksand for body, Poppins for headings -->
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@300&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* Base Reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background-color: #fffce8; /* lighter, soft pastel yellow */
+      color: #444;
+      text-align: center;
+    }
+
+    /* Navigation Bar */
+    nav {
+      background-color: #fff9d6;
+      padding: 20px 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    nav a {
+      margin: 0 20px;
+      text-decoration: none;
+      color: #5a4a2f;
+      font-weight: 500;
+      font-size: 1.1em;
+      transition: all 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #e3b76f;
+      text-decoration: underline;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding: 100px 20px;
+    }
+
+    h1 {
+      font-family: 'Great Vibes', 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;
+      font-size: 3.2em;
+      color: #5a4a2f; /* brown color for the whole phrase */
+      text-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      margin-bottom: .6rem;
+      font-weight:800;
+      letter-spacing:0.01em;
+    }
+
+    .site-quote{
+      font-family: 'Poppins', sans-serif;
+      font-size:1.05rem;
+      color:var(--accent-text);
+      font-weight:500;
+      margin-top:0.2rem;margin-bottom:1rem;
+      display:block;
+    }
+
+    .bio {
+      max-width: 780px;
+      margin: 0.25rem auto 0;
+      color: #5a4a2f;
+      font-size: 0.98rem; /* slightly smaller than heading */
+      line-height: 1.6;
+      padding: 0 12px;
+    }
+
+    /* If you ever want a short prompt under the heading distinct from the bio */
+    .prompt-small{
+      font-size:0.95rem;color:#6b5b3b;margin-top:.4rem
+    }
+
+    /* Profiles grid for multiple photos/descriptions */
+    .profiles-grid{
+      display:grid;
+      grid-template-columns:repeat(3, minmax(0,1fr));
+      gap:1rem;
+      align-items:start;
+      max-width:1100px;
+      margin:0.6rem auto 0.6rem auto; /* tightened vertical spacing */
+      padding:0 1rem;
+    }
+
+    .profile-card{background:var(--panel);padding:1rem;border-radius:8px;box-shadow:0 6px 20px rgba(11,15,30,0.04);text-align:left}
+    .profile-card figure{margin:0 0 .6rem 0}
+    .profile-card img{display:block;width:100%;height:auto;border-radius:6px}
+    .profile-card h3{margin:0 0 .4rem 0;font-size:1.05rem;color:var(--accent-text)}
+    .profile-card p{margin:0;color:var(--muted);font-size:.95rem;line-height:1.5}
+
+  .inline-video{max-width:328px;margin:0.6rem auto 0.8rem;padding:0;text-align:center}
+  .inline-video video{display:block}
+  .video-caption{display:inline-block;background:transparent;color:var(--accent-text, #5a4a2f);padding:0;font-family:'Poppins',sans-serif;font-weight:700;font-size:0.95rem;margin-bottom:0.5rem}
+
+  .section-title{color:var(--accent-text);font-weight:800;font-size:1.05rem;margin:0.6rem 0 0 0}
+
+    /* Responsive Tweaks */
+    @media (max-width: 600px) {
+      nav a {
+        display: block;
+        margin: 10px 0;
+      }
+
+      h1 {
+          font-size: 2.8em;
+        }
+      .profiles-grid{grid-template-columns:1fr}
+    }
+    /* Print-friendly rules */
+    @media print {
+      nav{display:none}
+      body{background:#fff !important;color:#000}
+      .main-content{padding:20px}
+      .profiles-grid{grid-template-columns:1fr 1fr 1fr}
+      .profile-card{box-shadow:none;border:none}
+      img{max-width:100%;height:auto}
+      .inline-video{page-break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="hobbies.html">Hobbies</a>
+    <a href="discover.html">Discover</a>
+    <a href="resume.html">Resume</a>
+    <a href="career.html">Career Interests</a>
+  </nav>
+
+  <!-- Main Content -->
+    <div class="main-content">
+    <!-- Profile photo in original rectangular aspect ratio -->
+  <h1>Welcome to My Website</h1>
+  <span class="site-quote">"Matthew 5:14 You are the light of the world. A town built on a hill cannot be hidden."</span>
+
+  <section class="profiles-grid" aria-label="Profile gallery">
+    <!-- Left: existing track photo card -->
+    <article class="profile-card">
+      <figure>
+        <img src="images/track_professional_photo.jpeg" alt="Track professional photo of Sevanna Burke" />
+      </figure>
+      <h3>About Me</h3>
+      <p class="bio">I’m Sevanna Burke — a college student and competitive track athlete passionate about strategic design and impactful branding. I combine creativity with a sharp eye for consumer behavior to create work that connects and resonates. I’m currently studying marketing at the University of Minnesota Duluth and exploring opportunities to grow, collaborate, and create meaningful work.</p>
+    </article>
+
+    <!-- Middle: outdoors photo (image above description) -->
+    <article class="profile-card">
+      <figure>
+        <img src="images/IMG_9991.jpeg" alt="Outdoors photo" />
+      </figure>
+      <h3>Outdoors</h3>
+  <p>Being outdoors fills me with energy and peace. The sun’s warmth recharges me, whether I’m hiking, biking, or just sitting in nature. It’s my favorite way to reset and feel fully alive. <a href="hobbies.html">Hobbies</a></p>
+      <div class="inline-video">
+        <div class="video-caption">My Welcome Video</div>
+        <video controls style="width:100%;height:auto;border-radius:8px;box-shadow:0 8px 24px rgba(15,23,42,0.08)">
+          <source src="videos/9f1ce6da45864168a2ffd20933d04399.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+    </article>
+
+    <!-- Right: family photo -->
+    <article class="profile-card">
+      <figure>
+        <img src="images/IMG_9992.jpeg" alt="Family photo" />
+      </figure>
+      <h3>Family</h3>
+  <p>Spending time with family reminds me what life is truly about—deep, trusting connections. For me, happiness comes from being surrounded by people I love and sharing real, emotional moments. That’s where I find purpose and peace. <a href="hobbies.html">Hobbies</a></p>
+    </article>
+  </section>
+  
+  <!-- removed standalone heading; caption is now overlaid on the inline video -->
+  </div>
+
+</body>
+</html>
