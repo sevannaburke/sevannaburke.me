@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Job Opportunities</title>
+	<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+	<style>
+		:root{--bg:#fff9d6;--accent:#800000}
+		body{font-family:'Quicksand',sans-serif;background:var(--bg);color:#222;margin:0;padding:28px}
+		nav{margin-bottom:18px}
+		nav a{color:var(--accent);text-decoration:none;font-weight:600}
+		.container{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:360px 1fr;gap:24px;align-items:start;padding:8px}
+		.photo{display:block;text-align:center}
+		.photo img{width:320px;max-width:100%;height:auto;border-radius:8px;box-shadow:0 8px 24px rgba(15,23,42,0.06)}
+		.photo figcaption{margin-top:10px;text-align:center;font-family:'Poppins',sans-serif;color:var(--accent);font-weight:700}
+		.contact-title{margin-top:10px;text-align:center;font-family:'Poppins',sans-serif;color:var(--accent);font-weight:800;font-size:1.05rem}
+		.contact-block{margin-top:8px;text-align:center;font-family:'Quicksand',sans-serif;color:#800000}
+		.contact-block p{margin:.25rem 0}
+		.contact-block a{color:var(--accent);text-decoration:none;font-weight:600}
+		.content{background:#ff9f6b;padding:20px;border-radius:10px;box-shadow:0 8px 24px rgba(15,23,42,0.04);color:#fff}
+		.content h1{font-family:'Poppins',sans-serif;color:#fff;margin-top:0}
+		.content p{line-height:1.6;color:#fff}
+
+		/* Subheader between main content and opportunities */
+		.subheader{max-width:1100px;margin:18px auto 8px auto;text-align:center;font-family:'Poppins',sans-serif;font-weight:800;color:#eaaec0;font-size:1.45rem;letter-spacing:0.4px}
+		.subheader span{display:inline-block;padding:6px 10px;border-radius:6px}
+
+		/* Decorative arrow (20% smaller): sits behind text/images so it doesn't cover them */
+		.big-arrow{position:absolute;left:50%;transform:translateX(calc(-50% - 2.5in)) rotate(90deg);transform-origin:center center;top:calc(340px + 1in);width:28vw;height:96px;pointer-events:none;z-index:1;opacity:0.98}
+		/* ensure main content and images render above the arrow */
+		nav, .container, .opportunities, .content, .photo, .subheader{position:relative;z-index:2}
+		@media (max-width:1100px){
+			/* on medium screens also shift left by 2.5in from center and move down 1in */
+			.big-arrow{left:50%;transform:translateX(calc(-50% - 2.5in)) rotate(90deg);transform-origin:center center;width:40vw;height:84px;top:calc(340px + 1in)}
+		}
+		@media (max-width:800px){
+			/* hide on small screens so it doesn't clutter */
+			.big-arrow{display:none}
+		}
+
+		/* Opportunities three-column row: full-bleed and larger visuals */
+		.opportunities{width:100%;max-width:100%;padding:30px 0;margin-top:28px;background:transparent}
+		/* keep the grid columns equal but allow the row to span the full viewport */
+		.opportunities .op-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:36px;align-items:start;width:calc(100% - 56px);margin:0 auto}
+		.op-card{padding:8px}
+		.op-card figure{margin:0;text-align:center}
+		/* images increased ~80% (previous max-height ~180px) */
+		.op-card img{width:100%;height:auto;max-height:340px;object-fit:contain;border-radius:8px;box-shadow:0 12px 28px rgba(15,23,42,0.08)}
+		.op-text{margin-top:12px;color:#fff;line-height:1.6;font-size:1.15rem}
+		/* panel style for the text boxes underneath each image (career page only) */
+		.op-panel{background:#ff9f6b;padding:18px;border-radius:10px;color:#fff}
+		.op-panel p{margin:0;color:#fff}
+		.op-panel strong{color:#fff;font-weight:700}
+		.op-bullets{list-style:disc;padding-left:1.1rem;margin:0;font-size:1.15rem;color:#fff}
+		.op-bullets li{margin-bottom:.8rem}
+		@media (max-width:800px){
+			.container{grid-template-columns:1fr;}
+			.photo{order:0;margin-bottom:12px}
+			.content{order:1}
+			.contact-block{margin-top:6px}
+			.op-grid{grid-template-columns:1fr}
+			.op-card img{max-height:260px}
+		}
+		@media print{nav{display:none}body{background:#fff;color:#000}.content{box-shadow:none}}
+	</style>
+</head>
+<body>
+	<nav><a href="index.html">← Back to Home</a></nav>
+	<main class="container">
+				<figure class="photo">
+						<img src="images/marketingpic_umd.jpg" alt="Marketing / UMD" />
+						<h2 class="contact-title">Contact Me</h2>
+						<div class="contact-block">
+							<p>Phone Number: 715-520-2549</p>
+							<p>Email: <a href="mailto:sevannabsmiles@gmail.com">sevannabsmiles@gmail.com</a></p>
+						</div>
+				</figure>
+		<div class="content">
+			<h1>Job Opportunities</h1>
+			<p>As a Marketing and Graphic Design major, my goal is to combine creativity with strategy to build meaningful connections between people and brands. I’m passionate about using design to tell stories, spark emotions, and bring ideas to life in a way that leaves a lasting impression. After graduation, I hope to work in a field where I can blend both sides of my major—whether that’s branding, social media marketing, advertising, or creative direction. I’m excited by the idea of creating visual campaigns that not only look great but also make an impact. In the future, I’d love to work for a marketing agency, a design firm, or even start my own creative business where I can collaborate with others to develop fresh, inspiring content. With this major, I know I’m building the foundation for a career that’s both imaginative and purposeful.</p>
+		</div>
+	</main>
+
+	<!-- Subheader: Next Stop -->
+	<!-- Decorative big arrow (SVG) -->
+	<svg class="big-arrow" viewBox="0 0 400 140" preserveAspectRatio="xMidYMin meet" aria-hidden="true">
+		<defs>
+			<marker id="arrowhead" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+				<path d="M0,0 L9,4.5 L0,9 L3,4.5 z" fill="#ffd400" />
+			</marker>
+		</defs>
+		<!-- path dips downward then curves up to point near the left of the centered subheader -->
+		<path d="M40 20 C 90 110, 190 120, 320 48" fill="none" stroke="#ffd400" stroke-width="12" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#arrowhead)" opacity="0.98" />
+	</svg>
+
+	<div class="subheader"><span>Next Stop: My Future Companies</span></div>
+
+	<!-- Opportunities row: Aerie (left), bullets (center), Poppi (right) -->
+	<section class="opportunities">
+		<div class="op-grid">
+			<article class="op-card">
+				<figure>
+					<img src="images/Aerie_logo_alone_green.webp" alt="Aerie logo">
+				</figure>
+				<p class="op-text op-panel"><strong>Aerie/American Eagle:</strong><br/>Working at Aerie—part of American Eagle—would be a strong fit for my marketing degree because the brand is growing and full of marketing opportunities. In fiscal 2024, Aerie saw comparable sales growth of 5% while American Eagle increased by 3%, and the company’s net revenue hit $5.3 billion. I’d be able to apply my skills in consumer insights, digital campaigns, and brand storytelling, all within a thriving women‑focused lifestyle brand that values creative marketing and inclusive messaging.</p>
+			</article>
+
+			<article class="op-card">
+				<ul class="op-bullets op-panel">
+					<li><strong>Career Goal:</strong> Pursue a career in consumer goods marketing to build strong brands and drive customer engagement.</li>
+					<li><strong>What I’ll Do:</strong> Develop and implement data-driven marketing strategies, product positioning, and creative campaigns across digital, social, and traditional media.</li>
+					<li><strong>Key Skills:</strong> Combine analytical insight, creativity, and strategic thinking to understand consumers and craft impactful brand messages.</li>
+					<li><strong>Collaboration:</strong> Work closely with cross-functional teams to execute campaigns and achieve business objectives.</li>
+					<li><strong>Tools &amp; Expertise:</strong> Utilize digital marketing platforms, data analytics, and content strategy to optimize performance and deliver measurable results.</li>
+				</ul>
+			</article>
+
+			<article class="op-card">
+				<figure>
+					<img src="images/poppi_job.webp" alt="Poppi brand">
+					</figure>
+					<p class="op-text op-panel"><strong>Poppi:</strong><br/>Working at Poppi would be an exciting opportunity because the company has grown rapidly and shows great promise for my marketing career. In 2024, Poppi generated about $500 million in revenue, marking a huge leap in just a few years. It also captured around 19% market share in the U.S. prebiotic soda category, making it a leader in a new, growing market.</p>
+			</article>
+		</div>
+	</section>
+</body>
+</html>
+

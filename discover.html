@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>The Beauty Lies Within — Discover</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@300&family=Poppins:wght@400;600;800&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+  :root{--bg:#fff9d6;--accent:#800000}
+    /* Use Lora for body text for a prettier serif; Quicksand remains available */
+    body{font-family:'Lora','Quicksand',serif;background:var(--bg);color:#222;margin:0;padding:28px}
+    nav{margin-bottom:18px}
+    nav a{color:var(--accent);text-decoration:none;font-weight:600}
+    .container{max-width:1100px;margin:0 auto;padding:8px}
+    h1.hero{font-family:'Poppins',sans-serif;color:var(--accent);font-size:2.6rem;text-align:center;margin:8px 0 20px}
+
+    
+
+  .lead{font-size:1.15rem;color:#222;line-height:1.72;margin:0 auto 20px;max-width:900px;text-align:left}
+
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin:22px 0}
+  /* Make gallery cards use the sunset-orange panel with white text */
+  .card{background:#ff9f6b;border-radius:10px;padding:0;overflow:hidden;box-shadow:0 8px 24px rgba(15,23,42,0.06);color:#fff}
+  .card h3, .card p, .card li{color:#fff}
+    .card img{display:block;width:100%;height:220px;object-fit:cover}
+    .card figcaption{padding:10px 12px;color:#444;font-size:0.95rem}
+
+  /* Layout for video + embedded game side-by-side */
+  /* tighten gap so media sits closer together but leave a little space */
+  .media-row{display:flex;gap:8px;align-items:flex-start;justify-content:center;max-width:780px;margin:44px auto 40px;padding:8px}
+  .media-left,.media-right{flex:0 0 46%;display:flex;justify-content:center}
+  .media-title{font-family:'Poppins',sans-serif;color:var(--accent);text-align:center;margin:8px 0 18px;font-size:2.2rem;font-weight:700}
+  /* increased by 20% (from 60% → 72%) */
+  .media-left video{width:72%;height:auto;border-radius:10px;box-shadow:0 8px 24px rgba(15,23,42,0.08);display:block}
+  .media-right iframe{width:72%;height:432px;border:0;border-radius:10px;box-shadow:0 8px 24px rgba(15,23,42,0.08);background:#fff;display:block;pointer-events:auto;cursor:pointer;z-index:1;outline:none}
+  .media-right iframe:focus{box-shadow:0 0 0 4px rgba(128,0,0,0.12)}
+  .iframe-wrap{position:relative;display:flex;justify-content:center}
+  .play-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.32);border-radius:10px;z-index:3;cursor:pointer}
+  .play-overlay-inner{background:rgba(255,255,255,0.98);color:var(--accent);padding:10px 16px;border-radius:8px;font-weight:700;box-shadow:0 6px 18px rgba(15,23,42,0.12)}
+
+    @media (max-width:900px){
+      .gallery{grid-template-columns:1fr}
+      .card img{height:300px}
+      h1.hero{font-size:2rem}
+      .media-row{flex-direction:column}
+  /* small-screen iframe height scaled up 20% (from 252 → 302) */
+  .media-right iframe{height:302px}
+    }
+
+    /* Print-friendly */
+    @media print{nav{display:none}body{background:#fff;color:#000}.card{box-shadow:none}img{max-width:100%}}
+  </style>
+</head>
+<body>
+  <nav><a href="index.html">← Back to Home</a></nav>
+  <main class="container">
+    <h1 class="hero">The Beauty Lies Within</h1>
+
+  <!-- removed Duluth lead paragraph per request; gallery will be shown directly under the header -->
+
+    <section class="gallery" aria-label="Duluth gallery">
+      <figure class="card">
+        <img src="images/sets_duluth.jpeg" alt="Duluth scene">
+      </figure>
+
+      <figure class="card">
+        <img src="images/umdnature.jpeg" alt="UMD nature">
+      </figure>
+
+      <figure class="card">
+        <img src="images/football_umd.jpeg" alt="UMD athletics">
+      </figure>
+    </section>
+
+    <p class="lead">The University of Minnesota Duluth is more than just a campus—it’s a community that truly believes in its students’ potential and their futures beyond graduation. With over 150 majors and minors, UMD offers endless opportunities for exploration, innovation, and growth across every field of study. Ranked as the #4 Regional Public University in the Midwest, UMD is recognized for its academic excellence, dedicated faculty, and hands-on learning experiences that prepare students for real-world success. Beyond the classroom, UMD is home to strong athletic programs and spirited Bulldog pride that bring the campus together. Whether you’re studying by the shores of Lake Superior or cheering from the stands, UMD provides an environment where students are supported, challenged, and inspired to achieve their goals.</p>
+
+    <h2 class="media-title">Become a Bulldog</h2>
+
+    <div class="media-row">
+      <div class="media-left">
+        <video controls>
+          <source src="videos/c48ffda699ed4de488f4dbcc5d0e52d7.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </div>
+      <div class="media-right">
+  <!-- Embedded game (opens the local game.html) -->
+  <div class="iframe-wrap">
+    <iframe id="gameFrame" src="game.html" title="Play Flying Bulldog" allow="fullscreen; autoplay; encrypted-media" allowfullscreen tabindex="0"></iframe>
+    <div id="playOverlay" class="play-overlay" role="button" tabindex="0" aria-label="Click to play the game">
+      <div class="play-overlay-inner">Click to play</div>
+    </div>
+  </div>
+      </div>
+    </div>
+
+    <script>
+    // Make the embedded game more responsive to clicks from the parent page.
+    (function(){
+      const frame = document.getElementById('gameFrame');
+      if(!frame) return;
+      // Focus the iframe when it finishes loading
+      frame.addEventListener('load', ()=> {
+        try{ frame.contentWindow.focus(); }catch(e){}
+      });
+
+      // If the user clicks the iframe element, try to start the game (remove start screen)
+      // and forward a click to the game's canvas so a single click will both start and flap.
+      frame.addEventListener('click', ()=> {
+        try{
+          const win = frame.contentWindow;
+          if(!win) return;
+          // If the start screen is present and visible, call its start function
+          const ss = win.document && win.document.getElementById && win.document.getElementById('startScreen');
+          if(ss && !ss.classList.contains('hidden')){
+            if(typeof win.startGame === 'function') win.startGame();
+            setTimeout(()=>{
+              try{
+                const canvas = win.document.getElementById('gameCanvas');
+                if(canvas){
+                  canvas.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+                  canvas.focus();
+                }
+              }catch(e){}
+            }, 40);
+            return;
+          }
+
+          // Otherwise just forward a click to the canvas to trigger a flap
+          const canvas = win.document && win.document.getElementById && win.document.getElementById('gameCanvas');
+          if(canvas){
+            canvas.dispatchEvent(new MouseEvent('click',{bubbles:true}));
+            canvas.focus();
+          }
+          try{ win.focus(); }catch(e){}
+        }catch(e){ /* ignore cross-window errors */ }
+      });
+    })();
+    </script>
+
+    <script>
+    // Overlay click-to-play handler: hides overlay and forwards the action into the iframe game.
+    (function(){
+      const frame = document.getElementById('gameFrame');
+      const overlay = document.getElementById('playOverlay');
+      if(!frame || !overlay) return;
+
+      function startAndClick(){
+        try{
+          const win = frame.contentWindow;
+          if(!win) return;
+          // If startGame exists, call it
+          if(typeof win.startGame === 'function') {
+            try{ win.startGame(); }catch(e){}
+          }
+          // Dispatch a click to the canvas to flap immediately
+          setTimeout(()=>{
+            try{
+              const canvas = win.document.getElementById('gameCanvas');
+              if(canvas){ canvas.dispatchEvent(new MouseEvent('click',{bubbles:true})); canvas.focus(); }
+            }catch(e){}
+          }, 40);
+        }catch(e){}
+        // hide overlay in parent
+        overlay.style.display = 'none';
+        try{ frame.focus(); }catch(e){}
+      }
+
+      overlay.addEventListener('click', startAndClick);
+      overlay.addEventListener('keydown', (ev)=>{ if(ev.key === 'Enter' || ev.key === ' '){ ev.preventDefault(); startAndClick(); } });
+
+      // If the iframe receives focus or click directly (some browsers), also hide overlay
+      frame.addEventListener('focus', ()=>{ overlay.style.display = 'none'; });
+    })();
+    </script>
+
+  </main>
+</body>
+</html>

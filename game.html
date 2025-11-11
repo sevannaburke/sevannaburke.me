@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flying Bulldog</title>
+   <style>
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+       }
+
+
+       body {
+           font-family: 'Arial', sans-serif;
+           background: linear-gradient(to bottom, #FFB6C1 0%, #FFC0CB 100%);
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           min-height: 100vh;
+           overflow: hidden;
+       }
+
+
+       .game-container {
+           position: relative;
+           width: 400px;
+           height: 600px;
+           background: linear-gradient(to bottom, #FFB6C1 0%, #FFC0CB 100%);
+           border: 3px solid #C2185B;
+           border-radius: 10px;
+           overflow: hidden;
+           box-shadow: 0 10px 30px rgba(194, 24, 91, 0.3);
+       }
+
+
+       .game-canvas {
+           width: 100%;
+           height: 100%;
+           display: block;
+       }
+
+
+       .start-screen, .game-over-screen {
+           position: absolute;
+           top: 0;
+           left: 0;
+           width: 100%;
+           height: 100%;
+           background: rgba(0,0,0,0.8);
+           display: flex;
+           flex-direction: column;
+           justify-content: center;
+           align-items: center;
+           color: white;
+           z-index: 10;
+       }
+
+
+       .start-screen h1, .game-over-screen h1 {
+           font-size: 2.5em;
+           margin-bottom: 20px;
+           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+           color: #C2185B;
+       }
+
+
+       .start-screen p, .game-over-screen p {
+           font-size: 1.2em;
+           margin-bottom: 30px;
+           text-align: center;
+       }
+
+
+       .score {
+           position: absolute;
+           top: 20px;
+           left: 50%;
+           transform: translateX(-50%);
+           font-size: 2em;
+           font-weight: bold;
+           color: white;
+           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+           z-index: 5;
+       }
+
+
+       .high-score {
+           position: absolute;
+           top: 60px;
+           left: 50%;
+           transform: translateX(-50%);
+           font-size: 1.2em;
+           color: white;
+           text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+           z-index: 5;
+       }
+
+
+       .start-btn, .restart-btn {
+           padding: 15px 30px;
+           font-size: 1.2em;
+           background: #E91E63;
+           color: white;
+           border: none;
+           border-radius: 25px;
+           cursor: pointer;
+           transition: background 0.3s;
+           box-shadow: 0 4px 15px rgba(233, 30, 99, 0.3);
+       }
+
+
+       .start-btn:hover, .restart-btn:hover {
+           background: #C2185B;
+       }
+
+
+       .instructions {
+           position: absolute;
+           bottom: 20px;
+           left: 50%;
+           transform: translateX(-50%);
+           color: white;
+           text-align: center;
+           font-size: 0.9em;
+           text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+       }
+
+
+       .hidden {
+           display: none;
+       }
+   </style>
+</head>
+<body>
+   <div class="game-container">
+       <div class="score" id="score">0</div>
+       <div class="high-score" id="highScore">High Score: 0</div>
+      
+       <canvas class="game-canvas" id="gameCanvas" width="400" height="600"></canvas>
+      
+       <div class="start-screen" id="startScreen">
+           <h1>🐶 Flying Bulldog</h1>
+           <p>Press SPACE or click to make the bulldog fly!</p>
+           <button class="start-btn" onclick="startGame()">Start Game</button>
+       </div>
+      
+       <div class="game-over-screen hidden" id="gameOverScreen">
+           <h1>Game Over!</h1>
+           <p id="finalScore">Score: 0</p>
+           <button class="restart-btn" onclick="restartGame()">Play Again</button>
+       </div>
+      
+       <div class="instructions">
+           Press SPACE or click to make the bulldog flap and fly!
+       </div>
+   </div>
+
+
+   <script>
+      /* SoundManager: simple WebAudio-based effects (no external files) */
+      const SoundManager = (function(){
+          let ctx = null;
+          function init(){
+              if(ctx) return;
+              try{ ctx = new (window.AudioContext || window.webkitAudioContext)(); }catch(e){ ctx = null; }
+          }
+          function playTone(freq, type = 'sine', duration = 0.08, vol = 0.08){
+              if(!ctx) return;
+              const now = ctx.currentTime;
+              const o = ctx.createOscillator();
+              const g = ctx.createGain();
+              o.type = type;
+              o.frequency.setValueAtTime(freq, now);
+              g.gain.setValueAtTime(vol, now);
+              g.gain.exponentialRampToValueAtTime(0.0001, now + duration);
+              o.connect(g); g.connect(ctx.destination);
+              o.start(now);
+              o.stop(now + duration + 0.02);
+          }
+          return {
+              init: init,
+              unlock: function(){ if(!ctx) init(); if(ctx && ctx.state === 'suspended') ctx.resume(); },
+              playFlap: function(){ init(); playTone(520,'square',0.06,0.12); },
+              playScore: function(){ init(); playTone(880,'sine',0.08,0.09); setTimeout(()=>playTone(660,'sine',0.09,0.06),60); },
+              playGameOver: function(){ init(); playTone(160,'sawtooth',0.28,0.16); setTimeout(()=>playTone(90,'sine',0.26,0.12),120); }
+          };
+      })();
+
+       class FlappyBird {
+           constructor() {
+               this.canvas = document.getElementById('gameCanvas');
+               this.ctx = this.canvas.getContext('2d');
+               this.gameWidth = this.canvas.width;
+               this.gameHeight = this.canvas.height;
+              
+               // Game state
+               this.gameRunning = false;
+               this.score = 0;
+               // read persisted high score; migrate from old key if present
+               this.highScore = parseInt(localStorage.getItem('flyingBulldogHighScore')) || 0;
+               const oldHigh = parseInt(localStorage.getItem('flappyBirdHighScore')) || 0;
+               if (oldHigh > this.highScore) {
+                   this.highScore = oldHigh;
+                   localStorage.setItem('flyingBulldogHighScore', this.highScore);
+               }
+              
+               // Bird properties
+               this.bird = {
+                   x: 80,
+                   y: this.gameHeight / 2,
+                   width: 45,
+                   height: 36,
+                   velocity: 0,
+                   gravity: 0.6,
+                   jumpPower: -9,
+                   bodyColor: '#D2B48C', // tan
+                   earColor: '#A0522D',
+                   snoutColor: '#F5DEB3',
+                   noseColor: '#2b2b2b',
+                   eyeColor: '#111'
+               };
+              
+               // Pipes
+               this.pipes = [];
+               this.pipeWidth = 60;
+               this.pipeGap = 150;
+               this.pipeSpeed = 2;
+               // Balloons (additional obstacles) - increased difficulty and variety
+               this.balloons = [];
+               this.balloonSpawnRate = 120; // lower = more frequent (was 220)
+               this.balloonSpeed = 3.0; // a bit faster
+               // default is kept for legacy checks but each balloon will carry its own radius
+               this.balloonRadius = 16;
+               this.frameCount = 0;
+              
+               // Ground
+               this.groundY = this.gameHeight - 50;
+               this.groundHeight = 50;
+              
+               this.init();
+           }
+          
+           init() {
+               this.updateHighScoreDisplay();
+               this.setupEventListeners();
+               this.gameLoop();
+           }
+          
+           setupEventListeners() {
+               document.addEventListener('keydown', (e) => {
+                   if (e.code === 'Space') {
+                       e.preventDefault();
+                      SoundManager.unlock();
+                       this.jump();
+                   }
+               });
+              
+               this.canvas.addEventListener('click', () => {
+                   SoundManager.unlock();
+                   this.jump();
+               });
+           }
+          
+           jump() {
+               if (!this.gameRunning) return;
+               this.bird.velocity = this.bird.jumpPower;
+              try{ SoundManager.playFlap(); }catch(e){}
+           }
+          
+           startGame() {
+               this.gameRunning = true;
+               this.score = 0;
+               this.bird.y = this.gameHeight / 2;
+               this.bird.velocity = 0;
+               this.pipes = [];
+               this.frameCount = 0;
+               document.getElementById('startScreen').classList.add('hidden');
+               document.getElementById('gameOverScreen').classList.add('hidden');
+           }
+          
+           gameOver() {
+               this.gameRunning = false;
+               if (this.score > this.highScore) {
+                   this.highScore = this.score;
+                   localStorage.setItem('flyingBulldogHighScore', this.highScore);
+                   this.updateHighScoreDisplay();
+               }
+               try{ SoundManager.playGameOver(); }catch(e){}
+               document.getElementById('finalScore').textContent = `Score: ${this.score}`;
+               document.getElementById('gameOverScreen').classList.remove('hidden');
+           }
+          
+           restartGame() {
+               this.startGame();
+           }
+          
+           updateHighScoreDisplay() {
+               document.getElementById('highScore').textContent = `High Score: ${this.highScore}`;
+           }
+          
+           update() {
+               if (!this.gameRunning) return;
+              
+               // Update bird
+               this.bird.velocity += this.bird.gravity;
+               this.bird.y += this.bird.velocity;
+              
+               // Check ground collision
+               if (this.bird.y + this.bird.height >= this.groundY) {
+                   this.bird.y = this.groundY - this.bird.height;
+                   this.gameOver();
+                   return;
+               }
+              
+               // Check ceiling collision
+               if (this.bird.y <= 0) {
+                   this.bird.y = 0;
+                   this.bird.velocity = 0;
+               }
+              
+               // Update pipes
+               this.frameCount++;
+               if (this.frameCount % this.pipeSpawnRate === 0) {
+                   this.spawnPipe();
+               }
+               // Spawn balloons occasionally
+               if (this.frameCount % this.balloonSpawnRate === 0) {
+                   this.spawnBalloon();
+               }
+              
+               // Move pipes
+               for (let i = this.pipes.length - 1; i >= 0; i--) {
+                   this.pipes[i].x -= this.pipeSpeed;
+
+                   // Remove pipes that are off screen
+                   if (this.pipes[i].x + this.pipeWidth < 0) {
+                       this.pipes.splice(i, 1);
+                       this.score++;
+                       document.getElementById('score').textContent = this.score;
+                       try{ SoundManager.playScore(); }catch(e){}
+                   }
+
+                   // Check collision with pipes
+                   if (this.checkCollision(this.pipes[i])) {
+                       this.gameOver();
+                       return;
+                   }
+               }
+
+               // Move balloons, award bonus points if safely passed, and check collisions
+               for (let i = this.balloons.length - 1; i >= 0; i--) {
+                   const b = this.balloons[i];
+                   b.x -= this.balloonSpeed;
+
+
+                       // If the player has safely passed the balloon (balloon passed left of the bulldog)
+                       if (!b.scored && (b.x + b.radius) < this.bird.x) {
+                           b.scored = true;
+                           // Award bonus points for passing safely
+                           this.score += 2; // bonus amount
+                           document.getElementById('score').textContent = this.score;
+                           try{ SoundManager.playScore(); }catch(e){}
+                       }
+
+                       // Remove off-screen balloons
+                       if (b.x + b.radius < 0) {
+                           this.balloons.splice(i, 1);
+                           continue;
+                       }
+
+                   // Collision with balloon ends the game
+                   if (this.checkBalloonCollision(b)) {
+                       this.gameOver();
+                       return;
+                   }
+               }
+           }
+          
+           spawnPipe() {
+               const minHeight = 50;
+               const maxHeight = this.gameHeight - this.pipeGap - this.groundHeight - minHeight;
+               const topHeight = Math.random() * (maxHeight - minHeight) + minHeight;
+              
+               this.pipes.push({
+                   x: this.gameWidth,
+                   topHeight: topHeight,
+                   bottomY: topHeight + this.pipeGap
+               });
+           }
+
+        spawnBalloon() {
+            // Choose a vertical position above the ground and below top
+            const minY = 40;
+            const maxY = this.gameHeight - this.groundHeight - 60;
+            const y = Math.random() * (maxY - minY) + minY;
+            // Random radius and color for variety
+            const radius = 12 + Math.random() * 10; // 12 - 22 px
+            const colors = ['#FF6F61','#FFD166','#F94144','#8ACB88','#6A4C93','#4D96FF','#FFD1DC'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            this.balloons.push({ x: this.gameWidth + 20, y, scored: false, radius, color });
+        }
+
+        checkBalloonCollision(balloon) {
+               // Rectangle (bulldog) vs circle (balloon) collision
+               const birdLeft = this.bird.x;
+               const birdRight = this.bird.x + this.bird.width;
+               const birdTop = this.bird.y;
+               const birdBottom = this.bird.y + this.bird.height;
+
+               const nearestX = Math.max(birdLeft, Math.min(balloon.x, birdRight));
+               const nearestY = Math.max(birdTop, Math.min(balloon.y, birdBottom));
+
+               const dx = balloon.x - nearestX;
+               const dy = balloon.y - nearestY;
+            const r = balloon.radius || this.balloonRadius;
+            return (dx * dx + dy * dy) < (r * r);
+          }
+          
+           checkCollision(pipe) {
+               const birdLeft = this.bird.x;
+               const birdRight = this.bird.x + this.bird.width;
+               const birdTop = this.bird.y;
+               const birdBottom = this.bird.y + this.bird.height;
+              
+               const pipeLeft = pipe.x;
+               const pipeRight = pipe.x + this.pipeWidth;
+              
+               // Check if bird is within pipe's x range
+               if (birdRight > pipeLeft && birdLeft < pipeRight) {
+                   // Check if bird hits top or bottom pipe
+                   if (birdTop < pipe.topHeight || birdBottom > pipe.bottomY) {
+                       return true;
+                   }
+               }
+              
+               return false;
+           }
+          
+           draw() {
+               // Clear canvas
+               this.ctx.fillStyle = '#FFB6C1';
+               this.ctx.fillRect(0, 0, this.gameWidth, this.gameHeight);
+              
+               // Draw clouds
+               this.drawClouds();
+              
+               // Draw pipes
+               this.drawPipes();
+              
+               // Draw ground
+               this.drawGround();
+               
+             // Draw balloons (additional obstacles)
+             this.drawBalloons();
+
+             // Draw bird
+             this.drawBird();
+           }
+          
+           drawClouds() {
+               this.ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+               for (let i = 0; i < 3; i++) {
+                   const x = (i * 150 + this.frameCount * 0.5) % (this.gameWidth + 100);
+                   const y = 50 + i * 30;
+                   this.drawCloud(x, y);
+               }
+           }
+          
+           drawCloud(x, y) {
+               this.ctx.beginPath();
+               this.ctx.arc(x, y, 20, 0, Math.PI * 2);
+               this.ctx.arc(x + 25, y, 25, 0, Math.PI * 2);
+               this.ctx.arc(x + 50, y, 20, 0, Math.PI * 2);
+               this.ctx.arc(x + 25, y - 15, 20, 0, Math.PI * 2);
+               this.ctx.fill();
+           }
+          
+           drawPipes() {
+               this.ctx.fillStyle = '#E91E63';
+               this.ctx.strokeStyle = '#C2185B';
+               this.ctx.lineWidth = 3;
+              
+               this.pipes.forEach(pipe => {
+                   // Top pipe
+                   this.ctx.fillRect(pipe.x, 0, this.pipeWidth, pipe.topHeight);
+                   this.ctx.strokeRect(pipe.x, 0, this.pipeWidth, pipe.topHeight);
+                  
+                   // Bottom pipe
+                   this.ctx.fillRect(pipe.x, pipe.bottomY, this.pipeWidth, this.gameHeight - pipe.bottomY);
+                   this.ctx.strokeRect(pipe.x, pipe.bottomY, this.pipeWidth, this.gameHeight - pipe.bottomY);
+                  
+                   // Pipe caps
+                   this.ctx.fillStyle = '#F06292';
+                   this.ctx.fillRect(pipe.x - 5, pipe.topHeight - 20, this.pipeWidth + 10, 20);
+                   this.ctx.fillRect(pipe.x - 5, pipe.bottomY, this.pipeWidth + 10, 20);
+                   this.ctx.fillStyle = '#E91E63';
+               });
+           }
+
+          drawBalloons() {
+               for (let i = 0; i < this.balloons.length; i++) {
+                   const b = this.balloons[i];
+                   // Balloon body (color varies)
+                   const r = b.radius || this.balloonRadius;
+                   this.ctx.beginPath();
+                   this.ctx.fillStyle = b.color || '#FF6F61';
+                   this.ctx.arc(b.x, b.y, r, 0, Math.PI * 2);
+                   this.ctx.fill();
+                   // Balloon highlight
+                   this.ctx.beginPath();
+                   this.ctx.fillStyle = 'rgba(255,255,255,0.6)';
+                   this.ctx.arc(b.x - Math.min(6, r*0.4), b.y - Math.min(6, r*0.4), r * 0.35, 0, Math.PI * 2);
+                   this.ctx.fill();
+                   // String
+                   this.ctx.strokeStyle = '#9E9E9E';
+                   this.ctx.lineWidth = 1;
+                   this.ctx.beginPath();
+                   this.ctx.moveTo(b.x, b.y + r);
+                   this.ctx.lineTo(b.x, b.y + r + 18);
+                   this.ctx.stroke();
+               }
+          }
+          
+           drawGround() {
+               this.ctx.fillStyle = '#8B4513';
+               this.ctx.fillRect(0, this.groundY, this.gameWidth, this.groundHeight);
+              
+               // Draw pink flowers on top
+               this.ctx.fillStyle = '#FF69B4';
+               this.ctx.fillRect(0, this.groundY, this.gameWidth, 10);
+              
+               // Draw some flower details
+               this.ctx.fillStyle = '#FF1493';
+               for (let i = 0; i < this.gameWidth; i += 30) {
+                   this.ctx.beginPath();
+                   this.ctx.arc(i + 15, this.groundY + 5, 3, 0, Math.PI * 2);
+                   this.ctx.fill();
+               }
+           }
+          
+           drawBird() {
+            // Draw a simple stylized bulldog
+            this.ctx.save();
+            this.ctx.translate(this.bird.x + this.bird.width/2, this.bird.y + this.bird.height/2);
+
+            // Rotate based on velocity for a bit of tilt
+            const rotation = Math.min(Math.max(this.bird.velocity * 0.08, -0.6), 0.6);
+            this.ctx.rotate(rotation);
+
+            // Body
+            this.ctx.fillStyle = this.bird.bodyColor;
+            this.ctx.beginPath();
+            this.ctx.ellipse(0, 4, this.bird.width/2, this.bird.height/2.2, 0, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Head
+            this.ctx.fillStyle = this.bird.bodyColor;
+            this.ctx.beginPath();
+            this.ctx.arc(12, -6, 12, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Ears
+            this.ctx.fillStyle = this.bird.earColor;
+            this.ctx.beginPath();
+            this.ctx.moveTo(4, -16);
+            this.ctx.lineTo(2, -26);
+            this.ctx.lineTo(10, -18);
+            this.ctx.closePath();
+            this.ctx.fill();
+
+            this.ctx.beginPath();
+            this.ctx.moveTo(18, -16);
+            this.ctx.lineTo(20, -26);
+            this.ctx.lineTo(12, -18);
+            this.ctx.closePath();
+            this.ctx.fill();
+
+            // Snout
+            this.ctx.fillStyle = this.bird.snoutColor;
+            this.ctx.beginPath();
+            this.ctx.ellipse(12, -2, 8, 6, 0, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Nose
+            this.ctx.fillStyle = this.bird.noseColor;
+            this.ctx.beginPath();
+            this.ctx.arc(12, -2, 2.5, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Eyes
+            this.ctx.fillStyle = 'white';
+            this.ctx.beginPath();
+            this.ctx.arc(8, -8, 3, 0, Math.PI * 2);
+            this.ctx.arc(16, -8, 3, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            this.ctx.fillStyle = this.bird.eyeColor;
+            this.ctx.beginPath();
+            this.ctx.arc(8.5, -8, 1.2, 0, Math.PI * 2);
+            this.ctx.arc(16.5, -8, 1.2, 0, Math.PI * 2);
+            this.ctx.fill();
+
+            // Mouth / jowls
+            this.ctx.fillStyle = '#e6c9b3';
+            this.ctx.beginPath();
+            this.ctx.ellipse(12, 2, 10, 5, 0, 0, Math.PI);
+            this.ctx.fill();
+
+            // Small legs
+            this.ctx.fillStyle = this.bird.bodyColor;
+            this.ctx.fillRect(-10, 10, 6, 8);
+            this.ctx.fillRect(6, 10, 6, 8);
+
+            this.ctx.restore();
+           }
+          
+           gameLoop() {
+               this.update();
+               this.draw();
+               requestAnimationFrame(() => this.gameLoop());
+           }
+       }
+      
+       // Initialize game
+       const game = new FlappyBird();
+      
+       // Global functions for buttons
+       function startGame() {
+           game.startGame();
+       }
+      
+       function restartGame() {
+           game.restartGame();
+       }
+   </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+

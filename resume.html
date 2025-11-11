@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sevanna - Resume</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+  body{font-family:'Quicksand',sans-serif;background:#fff9d6;color:#333;margin:0;padding:24px}
+  nav{margin-bottom:18px}
+  nav a{color:#800000;text-decoration:none;font-weight:600}
+    .container{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:360px 1fr;gap:24px;align-items:start}
+  /* The user requested the photo to be 40% smaller (i.e., displayed at ~60% of original). We'll set a display width that reflects that intent. */
+  .photo-wrap{display:flex;justify-content:center}
+  .photo-wrap img{width:240px;max-width:100%;height:auto;border-radius:8px;box-shadow:0 8px 24px rgba(15,23,42,0.06)}
+
+  /* Resume panel uses sunset-orange with white text */
+  .resume-box{background:#ff9f6b;padding:18px;border-radius:8px;box-shadow:0 8px 24px rgba(15,23,42,0.04);color:#ffffff}
+
+  .resume-box h2, .resume-box p, .resume-box li{color:#ffffff}
+  .resume-embed{width:100%;height:calc(100vh - 220px);border:0}
+
+  /* Resume content styling */
+  .resume-content{font-family:'Quicksand',sans-serif;color:#333}
+  .resume-content .contact-block p{margin:.35rem 0 0 0;line-height:1.35}
+  .resume-content h3{margin:.6rem 0 .2rem 0;color:#800000;font-family:'Poppins',sans-serif}
+  .resume-content .meta{font-size:.95rem;color:#800000;margin:0 0 .6rem 0}
+  .resume-content p{margin:0 0 .9rem 0;line-height:1.5}
+
+    @media (max-width:700px){
+      .container{grid-template-columns:1fr;}
+      .photo-wrap{margin-bottom:12px}
+      .resume-embed{height:420px}
+    }
+    /* Print rules */
+    @media print{
+      nav{display:none}
+      body{background:#fff;color:#000}
+      .container{grid-template-columns:240px 1fr}
+      .photo-wrap img{width:200px}
+      .resume-box{box-shadow:none;border:none}
+      .resume-content p{color:#000}
+      hr{border-top:1px solid #ddd}
+    }
+  </style>
+</head>
+<body>
+  <nav><a href="index.html">← Back to Home</a></nav>
+  <main class="container">
+    <aside class="photo-wrap">
+      <img src="images/Professional Photo.jpg" alt="Professional photo of Sevanna" />
+    </aside>
+
+    <section class="resume-box">
+  <h1 style="font-family:'Poppins',sans-serif;color:#800000;margin-top:0">Resume</h1>
+      <div class="resume-content">
+        <div class="contact-block">
+          <h2 style="margin:0;font-family:'Poppins',sans-serif;color:#800000">Sevanna Burke</h2>
+          <p style="margin:.25rem 0 0 0">2101 E Third St<br/>Duluth, MN 55812<br/>715-520-2529<br/>burk0522@d.umn.edu</p>
+        </div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px solid #eee"/>
+
+        <section class="job">
+          <h3>Cashier — Red Cross Pharmacy</h3>
+          <p class="meta">Spooner, WI · 11/2020–3/2021</p>
+          <p><strong>Job Description:</strong><br/>As a cashier at a pharmacy, I worked alongside other cashiers, managers, and customers. I performed custodial duties around my section and throughout the store. This included vacuuming, sweeping, cleaning and sanitizing hard surfaces, and dusting surfaces. Communication skills, as I had to help customers find items in-store and over the phone. Teamwork skills used to manage the store, assist customers, restock items, and clean in an orderly fashion. On my feet actively walking for hours at a time without taking breaks to sit.</p>
+        </section>
+
+        <section class="job">
+          <h3>Prep Cook — Pine Brook Farm</h3>
+          <p class="meta">Spooner, WI · 5/2021–8/2021</p>
+          <p><strong>Job Description:</strong><br/>Made pizzas, salads, and appetizer prep—cleaned surfaces and organized goods within a kitchen. Occasionally, I was a waitress taking orders and delivering food. Developed great communication and listening skills from interacting with customers. Learned how to time manage to make food and get orders out in a timely manner while still being patient with customers.</p>
+        </section>
+
+        <section class="job">
+          <h3>National Park Service (YCC) — Maintenance Worker</h3>
+          <p class="meta">National Park Service, Trego, WI · 06/2022–08/2024</p>
+          <p><strong>Job Description:</strong><br/>Worked alongside NPS Maintenance workers and Other YCC workers. Cleared out trees and debris from the river to prevent blockage. Operated Canoes on River to travel to Primitive camp sites to collect trash. Also used pickers to collect trash in rivers. Hiked and cleared nature trails while carrying equipment and backpacks. Dug fire rings out using shovels and dug privy out houses using shovels, pry bars, loppers and post hole diggers. Cleared trails using loppers, leaf blowers, weed eaters and rakes. Spread dirt and gravel using shovels and rakes. Cleaned buildings, cabins, vehicles, boats using vacuums, power washers, brooms, mops, towels and cleaning chemicals. Installed batteries and fueled a variety of equipment. Organized materials and items in the office setting. Involved in a variety of tailgate safety programs to safely and properly operate a variety of tools and equipment.</p>
+        </section>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
