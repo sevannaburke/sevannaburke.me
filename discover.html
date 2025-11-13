@@ -8,10 +8,33 @@
   <style>
   :root{--bg:#fff9d6;--accent:#800000}
     /* Use Lora for body text for a prettier serif; Quicksand remains available */
-    body{font-family:'Lora','Quicksand',serif;background:var(--bg);color:#222;margin:0;padding:28px}
-    nav{margin-bottom:18px}
-    nav a{color:var(--accent);text-decoration:none;font-weight:600}
-    .container{max-width:1100px;margin:0 auto;padding:8px}
+    body{font-family:'Lora','Quicksand',serif;background:var(--bg);color:#222;margin:0;padding:0}
+    
+    /* Navigation Bar */
+    nav {
+      background-color: #fff9d6;
+      padding: 20px 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      text-align: center;
+    }
+
+    nav a {
+      margin: 0 20px;
+      text-decoration: none;
+      color: #800000;
+      font-weight: 500;
+      font-size: 1.1em;
+      transition: all 0.3s ease;
+    }
+
+    nav a:hover {
+      color: #e3b76f;
+      text-decoration: underline;
+    }
+    .container{max-width:1100px;margin:0 auto;padding:24px 8px}
     h1.hero{font-family:'Poppins',sans-serif;color:var(--accent);font-size:2.6rem;text-align:center;margin:8px 0 20px}
 
     
@@ -52,7 +75,14 @@
   </style>
 </head>
 <body>
-  <nav><a href="index.html">← Back to Home</a></nav>
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="hobbies.html">Hobbies</a>
+    <a href="discover.html">Discover</a>
+    <a href="resume.html">Resume</a>
+    <a href="career.html">Career Interests</a>
+  </nav>
   <main class="container">
     <h1 class="hero">The Beauty Lies Within</h1>
 
@@ -79,7 +109,7 @@
     <div class="media-row">
       <div class="media-left">
         <video controls>
-          <source src="videos/c48ffda699ed4de488f4dbcc5d0e52d7.mp4" type="video/mp4">
+          <source src="videos/why umd.mp4" type="video/mp4">
           Your browser does not support the video tag.
         </video>
       </div>

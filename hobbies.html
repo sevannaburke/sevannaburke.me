@@ -6,10 +6,33 @@
   <title>Sevanna - Hobbies</title>
   <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
-  body{font-family:'Quicksand',sans-serif;background:#fff9d6;color:#333;margin:0;padding:24px}
-  nav{margin-bottom:18px}
-  nav a{color:#800000;text-decoration:none;font-weight:600}
-    .container{max-width:900px;margin:0 auto;padding:16px}
+  body{font-family:'Quicksand',sans-serif;background:#fff9d6;color:#333;margin:0;padding:0}
+  
+  /* Navigation Bar */
+  nav {
+    background-color: #fff9d6;
+    padding: 20px 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    text-align: center;
+  }
+
+  nav a {
+    margin: 0 20px;
+    text-decoration: none;
+    color: #800000;
+    font-weight: 500;
+    font-size: 1.1em;
+    transition: all 0.3s ease;
+  }
+
+  nav a:hover {
+    color: #e3b76f;
+    text-decoration: underline;
+  }
+    .container{max-width:900px;margin:0 auto;padding:24px 16px}
     h1.page-title{font-family:'Poppins',sans-serif;color:#800000;font-size:2rem;margin-bottom:12px;text-align:center}
 
     
@@ -33,7 +56,14 @@
   </style>
 </head>
 <body>
-  <nav><a href="index.html">← Back to Home</a></nav>
+  <!-- Navigation -->
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="hobbies.html">Hobbies</a>
+    <a href="discover.html">Discover</a>
+    <a href="resume.html">Resume</a>
+    <a href="career.html">Career Interests</a>
+  </nav>
   <main class="container">
     <h1 class="page-title">My Hobbies</h1>
 
